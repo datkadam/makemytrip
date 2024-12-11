@@ -10,9 +10,10 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>makemytrip</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>v1.11</version>
 	<name>makemytrip</name>
-	<description>Demo project for Spring Boot</description>
+	<packaging>war</packaging>
+	<description>Datta's Demo project for Spring Boot and CI Sonarqube Pipeline </description>
 	<url/>
 	<licenses>
 		<license/>
