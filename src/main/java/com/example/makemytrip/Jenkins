@@ -10,6 +10,12 @@ pipeline {
         maven 'maven_3.9.4'
     }
 
+     environment {
+            DOCKER_IMAGE = "datkadam/makemytrip"
+            ECR_REPO = "396913700550.dkr.ecr.ap-south-1.amazonaws.com/makemytrip"
+            NEXUS_URL = "http://13.200.255.154/:8085/repository/makemytrip/"
+        }
+
     stages {
         stage('Code Compilation') {
             steps {
@@ -51,15 +57,15 @@ pipeline {
         stage('Build & Tag Docker Image') {
             steps {
                 echo 'Building Docker Image with Tags...'
-                sh "docker build -t datkadam/makemytrip:latest -t makemytrip-microservice:latest ."
+                sh "docker build -t datkadam/makemytrip:latest -t makemytrip:latest ."
                 echo 'Docker Image Build Completed!'
             }
         }
         stage('Docker Image Scanning') {
             steps {
-                echo 'Scanning Docker Image...'
-                sh 'docker scan datkadam/makemytrip:latest || echo "Scan Failed - Proceeding with Caution"'
-                echo 'Docker Image Scanning Completed!'
+               echo 'Scanning Docker Image with Trivy...'
+               sh 'trivy image ${DOCKER_IMAGE}:latest || echo "Scan Failed - Proceeding with Caution"'
+               echo 'Docker Image Scanning Completed!'
             }
         }
         stage('Push Docker Image to Docker Hub') {
@@ -68,7 +74,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'dockerhubCred', variable: 'dockerhubCred')]) {
                         sh 'docker login docker.io -u dattakadam -p ${dockerhubCred}'
                         echo 'Pushing Docker Image to Docker Hub...'
-                        sh 'docker push datkadam/makemytrip:latest'
+                        sh 'docker push ${DOCKER_IMAGE}:latest'
                         echo 'Docker Image Pushed to Docker Hub Successfully!'
                     }
                 }
@@ -81,7 +87,7 @@ pipeline {
                         echo 'Tagging and Pushing Docker Image to ECR...'
                         sh '''
                             docker images
-                            docker tag makemytrip-microservice:latest 396913700550.dkr.ecr.ap-south-1.amazonaws.com/makemytrip:latest
+                            docker tag makemytrip:latest 396913700550.dkr.ecr.ap-south-1.amazonaws.com/makemytrip:latest
                             docker push 396913700550.dkr.ecr.ap-south-1.amazonaws.com/makemytrip:latest
                         '''
                         echo 'Docker Image Pushed to Amazon ECR Successfully!'
@@ -95,7 +101,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh 'docker login http://13.200.255.154:8085/repository/makemytrip -u admin -p ${PASSWORD}'
                         echo "Push Docker Image to Nexus : In Progress"
-                        sh 'docker tag makemytrip-microservice 13.200.255.154:8085/makemytrip:latest'
+                        sh 'docker tag makemytrip 13.200.255.154:8085/makemytrip:latest'
                         sh 'docker push 13.200.255.154::8085/makemytrip'
                         echo "Push Docker Image to Nexus : Completed"
                     }
