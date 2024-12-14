@@ -11,7 +11,7 @@ pipeline {
     }
 
      environment {
-            DOCKER_IMAGE = "datkadam/makemytrip"
+            DOCKER_IMAGE = "dattakadam/makemytrip"
             ECR_REPO = "396913700550.dkr.ecr.ap-south-1.amazonaws.com/makemytrip"
             NEXUS_URL = "http://13.126.124.175:8085/repository/makemytrip/"
         }
@@ -50,9 +50,9 @@ pipeline {
         }
         stage('Code Package') {
             steps {
-                echo 'Creating WAR Artifact...'
+                echo 'Creating JAR Artifact...'
                 sh 'mvn clean package'
-                echo 'WAR Artifact Created Successfully!'
+                echo 'JAR Artifact Created Successfully!'
             }
         }
         stage('Build & Tag Docker Image') {
