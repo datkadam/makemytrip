@@ -13,7 +13,7 @@
 	<version>v1.11</version>
 	<name>makemytrip</name>
 	<packaging>jar</packaging>
-	<description>Datta's Demo project for Spring Boot and CI Sonarqube Pipeline </description>
+	<description>Datta's Demo2 project for Spring Boot and CI Sonarqube,ECR and Nexus Pipeline </description>
 	<url/>
 	<licenses>
 		<license/>
