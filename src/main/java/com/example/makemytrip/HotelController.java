@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class HotelController {
     @GetMapping("/hotel")
     public String getData() {
-        return "Please book hotel Grand Ketan from MMT, 50% discount in Whole India";
+        return "Please book Hotel Grand Kshama from MMT, 50% discount in Whole India";
     }
 
     @PutMapping("/hotel/{hotelId}")

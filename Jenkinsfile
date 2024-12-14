@@ -38,6 +38,7 @@ pipeline {
             steps {
                 echo 'Starting SonarQube Code Quality Scan...'
                 withSonarQubeEnv('sonar-server') {
+                    sh "${scannerHome}/bin/sonar-scanner"
                     sh 'mvn sonar:sonar'
                 }
                 echo 'SonarQube Scan Completed. Checking Quality Gate...'
@@ -99,10 +100,10 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                        sh 'docker login http://13.200.255.154:8085/repository/makemytrip -u admin -p ${PASSWORD}'
+                        sh 'docker login  http://13.126.124.175:8085/repository/makemytrip -u admin -p ${PASSWORD}'
                         echo "Push Docker Image to Nexus : In Progress"
-                        sh 'docker tag makemytrip 13.200.255.154:8085/makemytrip:latest'
-                        sh 'docker push 13.200.255.154::8085/makemytrip'
+                        sh 'docker tag makemytrip 13.126.124.175:8085/makemytrip:latest'
+                        sh 'docker push 13.126.124.175:8085/makemytrip'
                         echo "Push Docker Image to Nexus : Completed"
                     }
                 }
